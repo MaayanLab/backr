@@ -104,6 +104,21 @@ enrich <- function(library, gene_array, background=NA)
   if(length(background) == 1){
     request_body_json = list(library = library, geneset = paste(gene_array, collapse = "\n"))
     res <- POST(paste0(pkg.env$server_url,"/api/enrich"), body = request_body_json)
+
+    enrichment_result = fromJSON(rawToChar(res$content))[[library]]
+    ll = list()
+    rank = 1
+    for(e in enrichment_result){
+      e[2] = paste(e[[2]], collapse=",")
+      e[3] = names(enrichment_result[rank])
+      e[4] = rank
+      ll[[length(ll)+1]] = (unlist(e)[c(4,3,1,2)])
+      rank = rank+1
+    }
+    df = data.frame(t(sapply(ll, c)))
+    colnames(df) = c("rank", "term", "pval", "overlap")
+
+    return(df)
   }
   else{
     background = sort(unique(background))
@@ -114,7 +129,7 @@ enrich <- function(library, gene_array, background=NA)
       backgroundid = fromJSON(rawToChar(res$content))[["backgroundid"]]
       pkg.env$background_cache[[hv]]= backgroundid
     }
-    
+
     genes_str = paste(gene_array, collapse="\n")
 
     payload = list(
@@ -127,20 +142,20 @@ enrich <- function(library, gene_array, background=NA)
 
     request_body_json = list(backgroundType = library, userListId = user_list_id, backgroundid=pkg.env$background_cache[[hv]])
     res <- POST(paste0(pkg.env$server_url,"/api/backgroundenrich"), body = request_body_json)
+
+    enrichment_result = fromJSON(rawToChar(res$content))[[library]]
+
+    ll = list()
+    for(e in enrichment_result){
+      e[6]= paste(e[[6]], collapse=",")
+      ll[[length(ll)+1]] = (unlist(e)[c(1,2,3,7,4,5,6)])
+    }
+
+    df = data.frame(t(sapply(ll, c)))
+    colnames(df) = c("rank", "term", "pval", "fdr", "odds", "escore", "overlap")
+
+    return(df)
   }
-
-  enrichment_result = fromJSON(rawToChar(res$content))[[library]]
-
-  ll = list()
-  for(e in enrichment_result){
-    e[6]= paste(e[[6]], collapse=",")
-    ll[[length(ll)+1]] = (unlist(e)[c(1,2,3,7,4,5,6)])
-  }
-
-  df = data.frame(t(sapply(ll, c)))
-  colnames(df) = c("rank", "term", "pval", "fdr", "odds", "escore", "overlap")
-
-  return(df)
 }
 
 
