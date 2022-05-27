@@ -118,8 +118,8 @@ enrich <- function(library, gene_array, background=NA)
     df = data.frame(t(sapply(ll, c)))
     colnames(df) = c("rank", "term", "pval", "overlap")
     df[,"pval"] = as.numeric(df$pval)
-    df = result[order(df$pval),]
-    df[,"rank"] = 1:nrow(result)
+    df = df[order(df$pval),]
+    df[,"rank"] = 1:nrow(df)
     return(df)
   }
   else{
