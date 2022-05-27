@@ -52,15 +52,11 @@ The function takes in a library as shown to be available under `backr::list_libr
 ```R
 
 library("backr")
-backr::set_server("https://maayanlab.cloud/speedrichr")
 
 # download GMT file from Enrichr database
 url = "https://maayanlab.cloud/Enrichr/geneSetLibrary?mode=text&libraryName=KEGG_2021_Human"
 download.file(url, "KEGG_2021_Human.gmt")
 gmt <- backr::read_gmt("KEGG_2021_Human.gmt")
-
-# push GMT file to API
-res <- backr::import_gmt("KEGG_2021_Human", gmt)
 
 # Use genes in KEGG gmt as background
 background = unique(unlist(gmt))
