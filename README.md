@@ -13,7 +13,7 @@ The current server URL is pointing to a lcoal host test URL. The package has to 
 
 ## Configuration
 
-The R package needs information where to direct requests to. Before queries can be run, the server needs to be specified. This only needs to be run once and is stored as an environmental variable of the package.
+The R package needs information where to direct requests to. Before queries can be run, the server needs to be specified. This only needs to be run once and is stored as an environmental variable of the package. The default is the EnrichrAPI, same as the Enrichr front end.
 
 ```R
 library("backr")
@@ -26,7 +26,6 @@ backr::set_server("https://maayanlab.cloud/speedrichr")
 
 ```R
 library("backr")
-backr::set_server("https://maayanlab.cloud/speedrichr")
 
 libraries <- backr::list_libraries()
 ```
@@ -38,7 +37,6 @@ Standard enrichment analysis. The function takes in a library as shown to be ava
 ```R
 
 library("backr")
-backr::set_server("https://maayanlab.cloud/speedrichr")
 
 library = "GO_Biological_Process_2021"
 genes = c('PTPN18','EGF','HSP90AA1','GAB1','NRG1','MATK','PTPN12','NRG2','PTK6','PRKCA','ERBIN','EREG','BTC','NRG4','PIK3R1','PIK3CA','CDC37','GRB2','STUB1','HBEGF','GRB7')
