@@ -1,4 +1,4 @@
-Package: backgroundenrichr
+Package: backr
 Type: Package
 Title: R package for speedenrichr access.
 Version: 0.1.0
