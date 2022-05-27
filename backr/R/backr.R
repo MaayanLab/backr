@@ -114,7 +114,18 @@ enrich <- function(library, gene_array, background=NA)
       backgroundid = fromJSON(rawToChar(res$content))[["backgroundid"]]
       pkg.env$background_cache[[hv]]= backgroundid
     }
-    request_body_json = list(library = library, geneset = paste(gene_array, collapse = "\n"), backgroundid=pkg.env$background_cache[[hv]])
+    
+    genes_str = paste(gene_array, collapse="\n")
+
+    payload = list(
+        list = genes_str,
+        description = ""
+    )
+
+    res = POST(paste0(pkg.env$server_url,"/api/addList"), body = payload)
+    user_list_id = fromJSON(rawToChar(res$content))[["userListId"]]
+
+    request_body_json = list(backgroundType = library, userListId = user_list_id, backgroundid=pkg.env$background_cache[[hv]])
     res <- POST(paste0(pkg.env$server_url,"/api/backgroundenrich"), body = request_body_json)
   }
 
